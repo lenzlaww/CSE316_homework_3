@@ -4,7 +4,10 @@ import { GlobalStoreContext } from "../store";
 function DeletePlaylistModal(){
     const { store } = useContext(GlobalStoreContext);
     let name = "";
-    //console.log(store);
+    if(store.targetDeleteList){
+        name = store.targetDeleteList.name
+    }
+    
 
     function handleCancelButton(){
         let modal = document.getElementById('delete-list-modal');
@@ -12,8 +15,9 @@ function DeletePlaylistModal(){
     }
 
     function handleConfirmButton(){
-        
-
+        store.deleteListById(store.targetDeleteList._id)
+        let modal = document.getElementById('delete-list-modal');
+        modal.classList.remove("is-visible");
     }
 
 

@@ -246,13 +246,13 @@ export const useGlobalStore = () => {
 
     store.markListForDeletion = function(idNamePair){
         console.log(idNamePair)
-        storeReducer({
-            type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
-            payload: idNamePair._id
-        });
-        console.log(store)
         let modal = document.getElementById('delete-list-modal');
         modal.classList.add("is-visible");
+        storeReducer({
+            type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+            payload: idNamePair
+        });
+        console.log(store)
     }
 
     store.deleteListById = function(id){
