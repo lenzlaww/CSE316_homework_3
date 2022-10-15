@@ -34,7 +34,7 @@ export const useGlobalStore = () => {
         listNameActive: false
     });
 
-    
+
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
     // HANDLE EVERY TYPE OF STATE CHANGE
     const storeReducer = (action) => {
@@ -203,6 +203,37 @@ export const useGlobalStore = () => {
             type: GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE,
             payload: null
         });
+    }
+
+    store.createNewList = async function(){
+        async function asyncCreateNewList(){
+            let newList = {
+                name: 'Untitled',
+                songs:[]
+            }
+            let response = await api.createNewList(newList);
+            if(response.data.success){
+                console.log(response)
+                let playlist = response.data.playlist;
+                console.log(playlist);
+                let pair = store.idNamePairs;
+                let newpair = {
+                    _id: playlist._id, 
+                    name: playlist.name
+                }
+                pair.push(newpair);
+                //console.log(pair);
+                storeReducer({
+                    type: GlobalStoreActionType.CREATE_NEW_LIST,
+                    payload: playlist
+                });
+                
+            }
+            return response.data.playlist._id;
+        }
+        let id = await asyncCreateNewList();
+        store.history.push("/playlist/" + id)
+        console.log(store.history)
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
