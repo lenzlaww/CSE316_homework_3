@@ -19,6 +19,7 @@ export const GlobalStoreActionType = {
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
+    DELETE_LIST:"DELETE_LIST",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -110,6 +111,15 @@ export const useGlobalStore = () => {
                     listNameActive: true,
                     //MarkedListForDelete: null,
                 });
+            }
+            case GlobalStoreActionType.DELETE_LIST:{
+                return setStore({
+                    idNamePairs: payload,
+                    currentList: null,
+                    newListCounter: store.newListCounter -1,
+                    listNameActive: false,
+                    targetDeleteList: null
+                })
             }
             default:
                 return store;
@@ -221,9 +231,9 @@ export const useGlobalStore = () => {
             }
             let response = await api.createNewList(newList);
             if(response.data.success){
-                console.log(response)
+                //console.log(response)
                 let playlist = response.data.playlist;
-                console.log(playlist);
+                //console.log(playlist);
                 let pair = store.idNamePairs;
                 let newpair = {
                     _id: playlist._id, 
@@ -241,7 +251,7 @@ export const useGlobalStore = () => {
         }
         let id = await asyncCreateNewList();
         store.history.push("/playlist/" + id)
-        console.log(store.history)
+        //console.log(store.history)
     }
 
     store.markListForDeletion = function(idNamePair){
@@ -257,7 +267,27 @@ export const useGlobalStore = () => {
 
     store.deleteListById = function(id){
         async function asyncDeleteListById (id){
-            let repsonse = await api.deleteListById(id);
+            let res = await api.deleteListById(id);
+            if(res.data.success){
+                //console.log(res.data)
+                let deleteListId = res.data.id;
+                let deleteListIndex
+                for(let i = 0; i < store.idNamePairs.length; i++){
+                    if(store.idNamePairs[i]._id === deleteListId){
+                        deleteListIndex = i
+                    }
+                }
+                let idNamePairs = store.idNamePairs
+                //console.log(deleteListIndex)
+                idNamePairs.splice(deleteListIndex,1)
+                //console.log(idNamePairs)
+
+                storeReducer({
+                    type: GlobalStoreActionType.DELETE_LIST,
+                    payload: idNamePairs
+                })
+                
+            }
 
         }
         asyncDeleteListById(id);
