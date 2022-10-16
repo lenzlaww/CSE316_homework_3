@@ -20,6 +20,8 @@ export const GlobalStoreActionType = {
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
     DELETE_LIST:"DELETE_LIST",
+    UPDATE_LIST: "UPDATE_LIST",
+    MARK_SONG_FOR_DELETION: "MARK_SONG_FOR_DELETION"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -35,6 +37,7 @@ export const useGlobalStore = () => {
         newListCounter: 0,
         listNameActive: false,
         targetDeleteList: null,
+        targetDeleteSongIndex: null,
     });
 
 
@@ -119,6 +122,25 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter -1,
                     listNameActive: false,
                     targetDeleteList: null
+                })
+            }
+            case GlobalStoreActionType.UPDATE_LIST: {
+                return setStore({
+                    idNamePairs:store.idNamePairs,
+                    currentList: payload,
+                    newListCounter: store.newListCounter,
+                    listNameActive: false,
+                    targetDeleteList: null
+                })
+            }
+            case GlobalStoreActionType.MARK_SONG_FOR_DELETION: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    listNameActive: false,
+                    targetDeleteList: null,
+                    targetDeleteSongIndex: payload
                 })
             }
             default:
@@ -291,6 +313,53 @@ export const useGlobalStore = () => {
 
         }
         asyncDeleteListById(id);
+    }
+
+    store.addSong = function(){
+        async function asyncAddSong(){
+            let newSong ={
+                title: "Untitled",
+                artist: "Unknown",
+                youTubeId: "dQw4w9WgXcQ"
+            }
+            let playlist = store.currentList;
+            
+            playlist.songs.push(newSong);
+            console.log(playlist)
+            let response = await api.updatePlaylistById(playlist._id, playlist)
+            if (response.data.success){
+                storeReducer({
+                type: GlobalStoreActionType.UPDATE_LIST,
+                payload: playlist
+            })
+            }
+        };
+        asyncAddSong();
+    }
+
+    store.markSongForDeletion = function(index){
+        let modal = document.getElementById('delete-song-modal');
+        modal.classList.add("is-visible");
+        storeReducer({
+            type: GlobalStoreActionType.MARK_SONG_FOR_DELETION,
+            payload: index
+        })
+    }
+    
+    store.deleteSong = function(index){
+        async function asyncDeleteSong(index){
+            console.log(store.currentList);
+            let currentList = store.currentList;
+            currentList.songs.splice(index,1)
+            let rep = await api.updatePlaylistById(currentList._id, currentList)
+            if(rep.data.success){
+                storeReducer({
+                    type: GlobalStoreActionType.UPDATE_LIST,
+                    payload: currentList
+                })
+            }
+        }
+        asyncDeleteSong(index)
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT

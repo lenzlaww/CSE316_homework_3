@@ -97,7 +97,8 @@ updatePlaylistById = async(req, res) =>{
         })
     }
 
-    let response = await Playlist.updateOne({_id: req.params.id}, {$set: {'name': body.name} })
+    let response = await Playlist.updateOne({_id: req.params.id}, 
+        {$set: {'name': body.name, 'songs': body.songs} })
 
     if(response.modifiedCount == 0){
         return res.status(400).json({
@@ -128,5 +129,5 @@ module.exports = {
     getPlaylistPairs,
     getPlaylistById,
     updatePlaylistById,
-    deleteListById
+    deleteListById,
 }
