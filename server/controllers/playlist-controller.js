@@ -64,6 +64,9 @@ getPlaylists = async (req, res) => {
 }
 getPlaylistPairs = async (req, res) => {
     await Playlist.find({}, (err, playlists) => {
+        if(playlists.length == 0){
+            return res.status(200).json({ success: true, idNamePairs:[]})
+        }
         if (err) {
             return res.status(400).json({ success: false, error: err})
         }

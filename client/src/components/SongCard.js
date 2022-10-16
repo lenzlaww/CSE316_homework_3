@@ -13,10 +13,18 @@ function SongCard(props) {
         store.markSongForDeletion(index);
     }
 
+    function handleClick (event) {
+        if (event.detail === 2) {
+            event.stopPropagation();
+            store.markSongForEdition(index);
+        }
+    }
+
     return (
         <div
             key={index}
             id={'song-' + index + '-card'}
+            onClick={handleClick}
             className={cardClass}
         >
             {index + 1}.

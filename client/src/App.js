@@ -1,7 +1,7 @@
 import './App.css';
 import { React } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { Banner, ListSelector, PlaylistCards, Statusbar, DeletePlaylistModal, DeleteSongModal } from './components'
+import { Banner, ListSelector, PlaylistCards, Statusbar, DeletePlaylistModal, DeleteSongModal, EditSongModal } from './components'
 /*
     This is our application's top-level component.
     
@@ -17,6 +17,7 @@ const App = () => {
             </Switch>
             <DeletePlaylistModal />
             <DeleteSongModal />
+            <EditSongModal />
             <Statusbar />
         </Router>
     )

@@ -21,7 +21,8 @@ export const GlobalStoreActionType = {
     MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
     DELETE_LIST:"DELETE_LIST",
     UPDATE_LIST: "UPDATE_LIST",
-    MARK_SONG_FOR_DELETION: "MARK_SONG_FOR_DELETION"
+    MARK_SONG_FOR_DELETION: "MARK_SONG_FOR_DELETION",
+    MARK_SONG_FOR_EDITION: "MARK_SONG_FOR_EDITION"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -38,6 +39,7 @@ export const useGlobalStore = () => {
         listNameActive: false,
         targetDeleteList: null,
         targetDeleteSongIndex: null,
+        targetEditSongIndex: null
     });
 
 
@@ -141,6 +143,17 @@ export const useGlobalStore = () => {
                     listNameActive: false,
                     targetDeleteList: null,
                     targetDeleteSongIndex: payload
+                })
+            }
+            case GlobalStoreActionType.MARK_SONG_FOR_EDITION: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    listNameActive: false,
+                    targetDeleteList: null,
+                    targetDeleteSongIndex: null,
+                    targetEditSongIndex: payload
                 })
             }
             default:
@@ -360,6 +373,33 @@ export const useGlobalStore = () => {
             }
         }
         asyncDeleteSong(index)
+    }
+
+    store.markSongForEdition = function(index){
+        let modal = document.getElementById('edit-song-modal');
+        modal.classList.add("is-visible");
+        document.getElementById('title').value = store.currentList.songs[index].title
+        document.getElementById('artist').value = store.currentList.songs[index].artist
+        document.getElementById('youTubeId').value = store.currentList.songs[index].youTubeId
+        storeReducer({
+            type: GlobalStoreActionType.MARK_SONG_FOR_EDITION,
+            payload: index
+        })
+    }
+
+    store.editSong = function(index, new_song){
+        async function asyncEditSong(index, new_song){
+            let currentList = store.currentList;
+            currentList.songs[index] = new_song;
+            let res = await api.updatePlaylistById(currentList._id, currentList);
+            if(res.data.success){
+                storeReducer({
+                    type: GlobalStoreActionType.UPDATE_LIST,
+                    payload: currentList
+                })
+            }
+        }
+        asyncEditSong(index, new_song)
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
