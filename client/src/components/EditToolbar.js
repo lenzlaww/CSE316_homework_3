@@ -20,11 +20,11 @@ function EditToolbar() {
         store.redo();
     }
     function handleClose() {
-        history.push("/");
+        //history.push("/");
         store.closeCurrentList();
     }
     function handleAddSong(){
-        store.addSong();
+        store.addAdditionSongTransaction();
     }
     let editStatus = false;
     if (store.isListNameEditActive) {

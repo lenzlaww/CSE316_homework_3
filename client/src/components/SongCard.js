@@ -24,8 +24,14 @@ function SongCard(props) {
         <div
             key={index}
             id={'song-' + index + '-card'}
-            onClick={handleClick}
             className={cardClass}
+            onClick={handleClick}
+            onDragStart={this.handleDragStart}
+            onDragOver={this.handleDragOver}
+            onDragEnter={this.handleDragEnter}
+            onDragLeave={this.handleDragLeave}
+            onDrop={this.handleDrop}
+            draggable="true"
         >
             {index + 1}.
             <a

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Tangerine');
 :root {
   /* 
         FIRST WE'LL DEFINE OUR SWATCHES, i.e. THE COMPLEMENTARY
@@ -22,7 +23,7 @@ body {
 
 #root {
   background-color: var(--swatch-primary);
-  font-family: "Lexend Exa";
+  font-family: "Tangerine";
   position: absolute;
   width: 80%;
   left: 10%;
@@ -68,15 +69,19 @@ body {
   grid-row: 2 / 3;
   display:grid;
   background-color: var(--swatch-primary);
+  display: flex;
+  flex-direction: column;
 }
 
 .playlister-button, .playlister-button-disabled {
   font-size:36pt;
-  border-width: 0px;
+  border-width: 1px;
   float:left;
   color: black;
   cursor: pointer;
   opacity: 100%;
+  border-radius: 10px;
+
 }
 
 .playlister-button:hover {
@@ -103,11 +108,27 @@ body {
 }
 
 #add-list-button {
-  float:left;
+  float: left;
+  border-width: 1px;
+  border-color: black;
+  border-radius: 10px;
+  font-size: 26pt;
+  margin: 5px;
+  margin-top: 3px;
+}
+
+#close-button {
+  width: 55px;
+  height: 77px;
+}
+
+#add-song-button {
+  height: 77px;
+  width: 55px;
 }
 
 .list-card, .selected-list-card, .unselected-list-card {
-  font-size: 18pt;
+  font-size: 25pt;
   margin: 10px;
   padding: 20px;
   border-radius: 25px;
@@ -150,6 +171,12 @@ input {
 
 .disabled:hover {
   color: var(--swatch-neutral);
+}
+
+#playlist-selector-heading{
+  height: 43px;
+  font-size: 46px;
+  text-align: center;
 }
 
 /* THIS STYLE SHEET MANAGES STYLE FOR OUR MODAL, i.e. DIALOG BOX */
@@ -327,3 +354,4 @@ input {
     transform: rotate(0deg);
   }
 }
+

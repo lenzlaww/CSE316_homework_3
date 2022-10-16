@@ -11,7 +11,7 @@ function EditSongModal(){
     }
 
     function handleConfirmButton(new_song){
-        store.editSong(store.targetEditSongIndex, new_song)
+        store.addEditSongTransaction(store.targetEditSongIndex, new_song)
         let modal = document.getElementById('edit-song-modal');
         modal.classList.remove("is-visible");
     }

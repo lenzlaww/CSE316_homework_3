@@ -14,7 +14,7 @@ function DeleteSongModal(){
     }
 
     function handleConfirmButton(){
-        store.deleteSong(store.targetDeleteSongIndex)
+        store.addDeleteSongTransaction(store.targetDeleteSongIndex)
         let modal = document.getElementById('delete-song-modal');
         modal.classList.remove("is-visible");
     }

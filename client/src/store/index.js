@@ -1,7 +1,11 @@
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
+import AddSong_Transaction from '../transactions/AddSong_Transaction';
+import DeleteSong_Transaction from '../transactions/DeleteSong_Transaction';
+import EditSong_Transaction from '../transactions/EditSong_Transaction';
 export const GlobalStoreContext = createContext({});
+
 /*
     This is our global data store. Note that it uses the Flux design pattern,
     which makes use of things like actions and reducers. 
@@ -199,10 +203,13 @@ export const useGlobalStore = () => {
 
     // THIS FUNCTION PROCESSES CLOSING THE CURRENTLY LOADED LIST
     store.closeCurrentList = function () {
+        console.log('close')
+        store.history.push("/");
         storeReducer({
             type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
             payload: {}
         });
+        
     }
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
@@ -400,6 +407,42 @@ export const useGlobalStore = () => {
             }
         }
         asyncEditSong(index, new_song)
+    }
+
+    store.addAdditionSongTransaction = function() {
+        let transaction = new AddSong_Transaction(store);
+        tps.addTransaction(transaction); 
+    }
+
+    store.addDeleteSongTransaction = function(index){
+        let orig_song = store.currentList.songs[index]
+        let transaction = new DeleteSong_Transaction(store, index, orig_song);
+        tps.addTransaction(transaction); 
+    }
+
+    store.addDeletedSong = function(index, song){
+        async function asyncAddDeletedSong(index, song){
+
+            let playlist = store.currentList;
+            
+            playlist.songs.splice(index, 0, song);
+            
+            console.log(playlist)
+            let response = await api.updatePlaylistById(playlist._id, playlist)
+            if (response.data.success){
+                storeReducer({
+                type: GlobalStoreActionType.UPDATE_LIST,
+                payload: playlist
+            })
+            }
+        };
+        asyncAddDeletedSong(index, song);
+    }
+
+    store.addEditSongTransaction = function(index, new_song){
+        let oldSong = store.currentList.songs[index]
+        let transaction = new EditSong_Transaction(store,oldSong, index, new_song);
+        tps.addTransaction(transaction); 
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
