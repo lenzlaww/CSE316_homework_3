@@ -6,14 +6,13 @@ function EditSongModal(){
     
 
     function handleCancelButton(){
-        let modal = document.getElementById('edit-song-modal');
-        modal.classList.remove("is-visible");
+        store.hideEditSongModal();
+        
     }
 
     function handleConfirmButton(new_song){
-        store.addEditSongTransaction(store.targetEditSongIndex, new_song)
-        let modal = document.getElementById('edit-song-modal');
-        modal.classList.remove("is-visible");
+        store.addEditSongTransaction(store.targetEditSongIndex, new_song);
+        store.hideEditSongModal();
     }
 
 

@@ -10,14 +10,13 @@ function DeletePlaylistModal(){
     
 
     function handleCancelButton(){
-        let modal = document.getElementById('delete-list-modal');
-        modal.classList.remove("is-visible");
+        store.hideDeleteListModal();
+
     }
 
     function handleConfirmButton(){
         store.deleteListById(store.targetDeleteList._id)
-        let modal = document.getElementById('delete-list-modal');
-        modal.classList.remove("is-visible");
+        store.hideDeleteListModal();
     }
 
 

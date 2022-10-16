@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { GlobalStoreContext } from '../store'
 import { useHistory } from 'react-router-dom'
+import jsTPS from '../common/jsTPS'
 /*
     This toolbar is a functional React component that
     manages the undo/redo/close buttons.
@@ -12,6 +13,8 @@ function EditToolbar() {
     const history = useHistory();
 
     let enabledButtonClass = "playlister-button";
+
+    const tps = new jsTPS();
 
     function handleUndo() {
         store.undo();
@@ -27,9 +30,39 @@ function EditToolbar() {
         store.addAdditionSongTransaction();
     }
     let editStatus = false;
+    let editStatusRedo = false;
+    let editStatusUndo = false;
     if (store.isListNameEditActive) {
         editStatus = true;
+        editStatusRedo = true;
+        editStatusUndo = true;
     }
+    if(!store.currentList){
+        editStatus = true;
+        editStatusRedo = true;
+        editStatusUndo = true;
+    }
+    if(store.currentList){
+        editStatus = false;
+        editStatusRedo = false;
+        editStatusUndo = false;
+        if(tps.hasTransactionToRedo){
+            editStatusRedo = false;
+        }else if(!tps.hasTransactionToRedo){
+            editStatusRedo = true;
+        }
+        if(tps.hasTransactionToUndo){
+            editStatusUndo = false;
+        }else if(!tps.hasTransactionToUndo){
+            editStatusUndo = true;
+        }
+    }
+    if (store.showModal){
+        editStatus = true;
+        editStatusRedo = true;
+        editStatusUndo = true;
+    }
+    
     return (
         <span id="edit-toolbar">
             <input
@@ -43,7 +76,7 @@ function EditToolbar() {
             <input
                 type="button"
                 id='undo-button'
-                disabled={editStatus}
+                disabled={editStatusUndo}
                 value="⟲"
                 className={enabledButtonClass}
                 onClick={handleUndo}
@@ -51,7 +84,7 @@ function EditToolbar() {
             <input
                 type="button"
                 id='redo-button'
-                disabled={editStatus}
+                disabled={editStatusRedo}
                 value="⟳"
                 className={enabledButtonClass}
                 onClick={handleRedo}

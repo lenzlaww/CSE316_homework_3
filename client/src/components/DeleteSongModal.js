@@ -9,14 +9,12 @@ function DeleteSongModal(){
     }
 
     function handleCancelButton(){
-        let modal = document.getElementById('delete-song-modal');
-        modal.classList.remove("is-visible");
+        store.hideDeleteSongModal();
     }
 
     function handleConfirmButton(){
         store.addDeleteSongTransaction(store.targetDeleteSongIndex)
-        let modal = document.getElementById('delete-song-modal');
-        modal.classList.remove("is-visible");
+        store.hideDeleteSongModal();
     }
 
     return (

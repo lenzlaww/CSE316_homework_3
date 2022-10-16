@@ -19,6 +19,24 @@ function SongCard(props) {
             store.markSongForEdition(index);
         }
     }
+    function handleDragStart (event){
+        event.dataTransfer.setData("song", event.target.id);
+    }
+
+    let handleDragIgnore = (event) =>{
+        event.preventDefault();
+    }
+
+    function handleDrop(event){
+        event.preventDefault();
+        let target = event.target;
+        let targetId = target.id;
+        targetId = targetId.substring(target.id.indexOf("-") + 1, target.id.indexOf("-") + 2);
+        let sourceId = event.dataTransfer.getData("song");
+        sourceId = sourceId.substring(sourceId.indexOf("-") + 1, target.id.indexOf("-") + 2);
+
+        store.addMoveSongTransaction(sourceId, targetId);
+    }
 
     return (
         <div
@@ -26,11 +44,11 @@ function SongCard(props) {
             id={'song-' + index + '-card'}
             className={cardClass}
             onClick={handleClick}
-            onDragStart={this.handleDragStart}
-            onDragOver={this.handleDragOver}
-            onDragEnter={this.handleDragEnter}
-            onDragLeave={this.handleDragLeave}
-            onDrop={this.handleDrop}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragIgnore}
+            onDragEnter={handleDragIgnore}
+            onDragLeave={handleDragIgnore}
+            onDrop={handleDrop}
             draggable="true"
         >
             {index + 1}.
