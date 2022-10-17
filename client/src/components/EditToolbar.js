@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { GlobalStoreContext } from '../store'
 import { useHistory } from 'react-router-dom'
-import jsTPS from '../common/jsTPS'
+
 /*
     This toolbar is a functional React component that
     manages the undo/redo/close buttons.
@@ -14,7 +14,7 @@ function EditToolbar() {
 
     let enabledButtonClass = "playlister-button";
 
-    const tps = new jsTPS();
+    
 
     function handleUndo() {
         store.undo();
@@ -32,6 +32,8 @@ function EditToolbar() {
     let editStatus = false;
     let editStatusRedo = false;
     let editStatusUndo = false;
+    let hasRedo = store.hasRedo()
+    let hasUndo = store.hasUndo()
     if (store.isListNameEditActive) {
         editStatus = true;
         editStatusRedo = true;
@@ -46,14 +48,14 @@ function EditToolbar() {
         editStatus = false;
         editStatusRedo = false;
         editStatusUndo = false;
-        if(tps.hasTransactionToRedo){
+        if(hasRedo){
             editStatusRedo = false;
-        }else if(!tps.hasTransactionToRedo){
+        }else if(!hasRedo){
             editStatusRedo = true;
         }
-        if(tps.hasTransactionToUndo){
+        if(hasUndo){
             editStatusUndo = false;
-        }else if(!tps.hasTransactionToUndo){
+        }else if(!hasUndo){
             editStatusUndo = true;
         }
     }

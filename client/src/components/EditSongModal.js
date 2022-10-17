@@ -11,8 +11,8 @@ function EditSongModal(){
     }
 
     function handleConfirmButton(new_song){
-        store.addEditSongTransaction(store.targetEditSongIndex, new_song);
         store.hideEditSongModal();
+        store.addEditSongTransaction(store.targetEditSongIndex, new_song);
     }
 
 

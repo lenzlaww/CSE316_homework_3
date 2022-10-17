@@ -4,7 +4,7 @@ import { GlobalStoreContext } from "../store";
 function DeleteSongModal(){
     const { store } = useContext(GlobalStoreContext);
     let name = "";
-    if(store.targetDeleteSongIndex){
+    if(store.targetDeleteSongIndex != null){
         name = store.currentList.songs[store.targetDeleteSongIndex].title
     }
 

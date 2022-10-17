@@ -15,8 +15,8 @@ function DeletePlaylistModal(){
     }
 
     function handleConfirmButton(){
-        store.deleteListById(store.targetDeleteList._id)
         store.hideDeleteListModal();
+        store.deleteListById(store.targetDeleteList._id)
     }
 
 

@@ -61,7 +61,6 @@ export const useGlobalStore = () => {
                     currentList: payload.playlist,
                     newListCounter: store.newListCounter,
                     listNameActive: false,
-                    //MarkedListForDelete: null,
                 });
             }
             // STOP EDITING THE CURRENT LIST
@@ -71,7 +70,6 @@ export const useGlobalStore = () => {
                     currentList: payload,
                     newListCounter: store.newListCounter,
                     listNameActive: false,
-                    //MarkedListForDelete: null,
                 })
             }
             // CREATE A NEW LIST
@@ -81,7 +79,6 @@ export const useGlobalStore = () => {
                     currentList: payload,
                     newListCounter: store.newListCounter + 1,
                     listNameActive: false,
-                    //MarkedListForDelete: null,
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -122,7 +119,6 @@ export const useGlobalStore = () => {
                     currentList: payload,
                     newListCounter: store.newListCounter,
                     listNameActive: true,
-                    //MarkedListForDelete: null,
                 });
             }
             case GlobalStoreActionType.DELETE_LIST:{
@@ -131,7 +127,6 @@ export const useGlobalStore = () => {
                     currentList: null,
                     newListCounter: store.newListCounter -1,
                     listNameActive: false,
-                    targetDeleteList: null,
                 })
             }
             case GlobalStoreActionType.UPDATE_LIST: {
@@ -140,7 +135,6 @@ export const useGlobalStore = () => {
                     currentList: payload,
                     newListCounter: store.newListCounter,
                     listNameActive: false,
-                    targetDeleteList: null,
                 })
             }
             case GlobalStoreActionType.MARK_SONG_FOR_DELETION: {
@@ -149,7 +143,6 @@ export const useGlobalStore = () => {
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     listNameActive: false,
-                    targetDeleteList: null,
                     targetDeleteSongIndex: payload,
                     showModal: true,
                 })
@@ -160,8 +153,6 @@ export const useGlobalStore = () => {
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     listNameActive: false,
-                    targetDeleteList: null,
-                    targetDeleteSongIndex: null,
                     targetEditSongIndex: payload,
                     showModal: true
                 })
@@ -341,6 +332,7 @@ export const useGlobalStore = () => {
 
         }
         asyncDeleteListById(id);
+        console.log(store.targetDeleteList)
     }
 
     store.addSong = function(){
@@ -505,6 +497,33 @@ export const useGlobalStore = () => {
             payload: store.currentList
         })
     }
+
+    store.hasRedo = function(){
+        return tps.hasTransactionToRedo();
+    }
+
+    store.hasUndo = function(){
+        return tps.hasTransactionToUndo();
+    }
+
+    function keypress(event){
+        if(event.ctrlKey&& !store.showModal){
+            if(event.key === 'z'){
+                if(tps.hasTransactionToUndo()){
+                    store.undo();
+                }
+                
+            }
+            if(event.key ==='y'){
+                if(tps.hasTransactionToRedo()){
+                    store.redo();
+                }
+                
+            }
+        }
+
+    }
+    document.onkeydown=(e) => keypress(e, this);
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };
