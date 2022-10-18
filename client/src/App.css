@@ -67,6 +67,7 @@ body {
 }
 
 #playlist-selector, #playlist-cards {
+  overflow: scroll;
   height: 100%;
   grid-column: 2 / 3;
   grid-row: 3 / 4;
